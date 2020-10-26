@@ -1,0 +1,49 @@
+---
+version: "3.8"
+
+services:
+  grafana:
+    build:
+      context: ./services/grafana/
+      dockerfile: Dockerfile
+      args:
+        GRAFANA_TAR_LINK: https://dl.grafana.com/oss/release/grafana-7.2.2.linux-amd64.tar.gz
+    image: grafana:7.2.2    
+    container_name: grafana
+    networks:
+      - dockernet
+    depends_on:
+      - prometheus
+
+  prometheus:
+    build:
+      context: ./services/prometheus
+      dockerfile: Dockerfile
+      args:
+        PROMETHEUS_TAR_LINK: https://github.com/prometheus/prometheus/releases/download/v2.22.1/prometheus-2.22.1.linux-amd64.tar.gz
+    volumes:
+      - ./services/prometheus/config:/root/.config:ro
+    image: prometheus:2.22.1
+    container_name: prometheus
+    networks:
+      - dockernet
+
+  opentsdb:
+    build:
+      context: ./services/opentsdb
+      dockerfile: Dockerfile
+      args:
+        HBASE_TAR_LINK: https://downloads.apache.org/hbase/stable/hbase-2.2.6-bin.tar.gz
+        HBASE_HOME: /opt/hbase-2.2.6
+        OPENTSDB_PACKAGE_LINK: https://github.com/OpenTSDB/opentsdb/releases/download/v2.4.0/opentsdb-2.4.0_all.deb
+    image: opentsdb:2.4.0
+    container_name: opentsdb
+    networks:
+      - dockernet
+
+networks:
+  dockernet:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.100.0/24"
