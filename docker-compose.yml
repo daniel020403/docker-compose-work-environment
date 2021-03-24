@@ -47,6 +47,17 @@ services:
       dockerfile: Dockerfile
     image: mysql:8.0.23
     container_name: mysql
+    
+  hugo:
+    build:
+      context: ./services/hugo
+      dockerfile: Dockerfile
+    volumes:
+      - ./shared/riak-docs-fork:/mnt/riak-docs-fork
+    ports:
+      - 1313:1313
+    image: hugo:debian
+    container_name: hugo
     networks:
       - dockernet
 
