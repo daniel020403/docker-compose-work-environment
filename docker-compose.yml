@@ -41,6 +41,15 @@ services:
     networks:
       - dockernet
 
+  hugo:
+    build:
+      context: ./services/hugo
+      dockerfile: Dockerfile
+    image: hugo:debian
+    container_name: hugo
+    networks:
+      - dockernet
+
 networks:
   dockernet:
     ipam:
