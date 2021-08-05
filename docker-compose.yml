@@ -47,6 +47,8 @@ services:
       dockerfile: Dockerfile
     image: mysql:8.0.23
     container_name: mysql
+    networks:
+      - dockernet
     
   hugo:
     build:
